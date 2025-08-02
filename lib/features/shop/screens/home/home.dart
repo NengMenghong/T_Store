@@ -22,54 +22,6 @@ import 'package:t_store/utils/helpers/helper_functions.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = Get.put(_HomeNavigationController());
-    final darkMode = THelperFunctions.isDarkMode(context);
-
-    return Scaffold(
-      bottomNavigationBar: Obx(
-        () => NavigationBar(
-          height: 80,
-          elevation: 0,
-          selectedIndex: controller.selectedIndex.value,
-          onDestinationSelected: (index) =>
-              controller.selectedIndex.value = index,
-          backgroundColor: darkMode ? TColors.black : Colors.white,
-          indicatorColor: darkMode
-              ? TColors.white.withOpacity(0.1)
-              : TColors.black.withOpacity(0.1),
-          destinations: const [
-            NavigationDestination(icon: Icon(Iconsax.home), label: "Home"),
-            NavigationDestination(icon: Icon(Iconsax.shop), label: "Store"),
-            NavigationDestination(icon: Icon(Iconsax.heart), label: "Wishlist"),
-            NavigationDestination(icon: Icon(Iconsax.user), label: "Profile"),
-          ],
-        ),
-      ),
-      body: Obx(() => controller.screens[controller.selectedIndex.value]),
-    );
-  }
-}
-
-// Local navigation controller for HomeScreen
-class _HomeNavigationController extends GetxController {
-  final Rx<int> selectedIndex = 0.obs;
-
-  final screens = [
-    // You can use the same widgets as in NavigationMenu
-    const HomeScreenContent(), // Extract your current HomeScreen body to this widget
-    const StoreScreen(),
-    const FavouriteScreen(),
-    const SettingsScreen(),
-  ];
-}
-
-// Extract your current HomeScreen body (the SingleChildScrollView and its content) into this widget:
-class HomeScreenContent extends StatelessWidget {
-  const HomeScreenContent({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProductController());
