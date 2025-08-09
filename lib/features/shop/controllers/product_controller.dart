@@ -51,7 +51,20 @@ class ProductController extends GetxController {
           productVariations: [],
           stock: 5,
         ),
+        ProductModel(
+          id: '3',
+          title: 'Gaming Laptop',
+          price: 1299.99,
+          salePrice: 1199.99,
+          image: 'assets/images/products/gaming_laptop.png',
+          thumbnail:
+              'assets/images/products/gaming_laptop.png', // <-- set thumbnail
+          productType: ProductType.single.toString(),
+          productVariations: [],
+          stock: 2,
+        ),
       ];
+      
 
       featuredProducts.assignAll(products);
     } catch (e) {

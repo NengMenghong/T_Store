@@ -1,6 +1,5 @@
 // features/shop/screens/home/home.dart
 
-// features/shop/screens/home/home.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:t_store/common/widgets/custom_shapes/containers/primary_header_container.dart';
@@ -12,6 +11,7 @@ import 'package:t_store/common/widgets/texts/section_heading.dart';
 import 'package:t_store/features/shop/controllers/product_controller.dart';
 import 'package:t_store/features/shop/screens/all_products/all_products.dart';
 import 'package:t_store/features/shop/screens/home/widgets/home_appbar.dart';
+import 'package:t_store/features/shop/screens/home/widgets/promo_slider.dart';
 import 'package:t_store/utils/constraints/sizes.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -56,11 +56,9 @@ class HomeScreen extends StatelessWidget {
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: const [
-                              
                               _CategoryItem(
                                   icon: 'assets/icons/categories/icons8-bowling-50.png',
                                   label: 'Bowling'),
-                                  
                               _CategoryItem(
                                   icon: 'assets/icons/categories/icons8-cosmetics-50.png',
                                   label: 'Cosmetics'),
@@ -98,7 +96,22 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            
+            /// PROMO SLIDER
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'SNEAKERS OF THE WEEK',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: TSizes.spaceBtwItems),
+                  TPromoSlider(),
+                ],
+              ),
+            ),
+            const SizedBox(height: TSizes.spaceBtwSections),
 
             /// POPULAR PRODUCTS
             Padding(
