@@ -24,8 +24,8 @@ class DefaultFirebaseOptions {
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
-      case TargetPlatform.iOS:
-        return ios;
+      /*case TargetPlatform.iOS:
+        return ios;*/
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -65,7 +65,7 @@ class DefaultFirebaseOptions {
     storageBucket: 't-store-6c45d.firebasestorage.app',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
+  /*static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBMnNKdx0N4j0QqmFsORK4ETZ1JfNKw-ZQ',
     appId: '1:895858274599:ios:ba458be12a83f990f3b902',
     messagingSenderId: '895858274599',
@@ -74,5 +74,5 @@ class DefaultFirebaseOptions {
     androidClientId: '895858274599-o4gaqtqu9o7is371vjedjl81ai6t3a7m.apps.googleusercontent.com',
     iosClientId: '895858274599-8b9n6qpv73vhpurfj8ernr3m4pt2etpk.apps.googleusercontent.com',
     iosBundleId: 'com.example.tStore',
-  );
+  );*/
 }

@@ -1,3 +1,4 @@
+// common/widgets/appbar/appbar.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -12,7 +13,7 @@ class TAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.title,
       this.showBackArrow = false,
       this.leadingIcon,
-        this.actions,
+      this.actions,
       this.leadingOnPressed});
 
   final Widget? title;

@@ -1,146 +1,175 @@
 // features/shop/screens/home/home.dart
+
+// features/shop/screens/home/home.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:t_store/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:t_store/common/widgets/custom_shapes/containers/search_container.dart';
 import 'package:t_store/common/widgets/layouts/grid_layout.dart';
 import 'package:t_store/common/widgets/loaders/vertical_product_shimmer.dart';
 import 'package:t_store/common/widgets/products/product_cards/product_card_vertical.dart';
 import 'package:t_store/common/widgets/texts/section_heading.dart';
-import 'package:t_store/features/personalization/screens/settings/settings.dart';
 import 'package:t_store/features/shop/controllers/product_controller.dart';
 import 'package:t_store/features/shop/screens/all_products/all_products.dart';
 import 'package:t_store/features/shop/screens/home/widgets/home_appbar.dart';
-import 'package:t_store/features/shop/screens/home/widgets/home_categories.dart';
-import 'package:t_store/features/shop/screens/home/widgets/promo_slider.dart';
-import 'package:t_store/features/shop/screens/store/store.dart';
-import 'package:t_store/features/shop/screens/wishlist/wishlist.dart';
-import 'package:t_store/utils/constraints/colors.dart';
 import 'package:t_store/utils/constraints/sizes.dart';
-import 'package:t_store/utils/helpers/helper_functions.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(_HomeNavigationController());
-    final darkMode = THelperFunctions.isDarkMode(context);
+    final controller = Get.put(ProductController());
 
     return Scaffold(
-      bottomNavigationBar: Obx(
-        () => NavigationBar(
-          height: 80,
-          elevation: 0,
-          selectedIndex: controller.selectedIndex.value,
-          onDestinationSelected: (index) =>
-              controller.selectedIndex.value = index,
-          backgroundColor: darkMode ? TColors.black : Colors.white,
-          indicatorColor: darkMode
-              ? TColors.white.withOpacity(0.1)
-              : TColors.black.withOpacity(0.1),
-          destinations: const [
-            NavigationDestination(icon: Icon(Iconsax.home), label: "Home"),
-            NavigationDestination(icon: Icon(Iconsax.shop), label: "Store"),
-            NavigationDestination(icon: Icon(Iconsax.heart), label: "Wishlist"),
-            NavigationDestination(icon: Icon(Iconsax.user), label: "Profile"),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            /// HEADER
+            TPrimaryHeaderContainer(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const THomeAppBar(),
+                  const SizedBox(height: TSizes.spaceBtwSections),
+
+                  /// SEARCH BAR
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
+                    child: TSearchContainer(text: 'Search In Store'),
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwSections),
+
+                  /// POPULAR CATEGORIES
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Popular Categories",
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        const SizedBox(height: 15),
+                        SizedBox(
+                          height: 80,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: const [
+                              
+                              _CategoryItem(
+                                  icon: 'assets/icons/categories/icons8-bowling-50.png',
+                                  label: 'Bowling'),
+                                  
+                              _CategoryItem(
+                                  icon: 'assets/icons/categories/icons8-cosmetics-50.png',
+                                  label: 'Cosmetics'),
+                              _CategoryItem(
+                                  icon: 'assets/icons/categories/icons8-dining-chair-side-vew-64.png',
+                                  label: 'Dining Chair'),
+                              _CategoryItem(
+                                  icon: 'assets/icons/categories/icons8-dog-heart-64.png',
+                                  label: 'Pets'),
+                              _CategoryItem(
+                                  icon: 'assets/icons/categories/icons8-shoes-50.png',
+                                  label: 'Shoes'),
+                              _CategoryItem(
+                                  icon: 'assets/icons/categories/icons8-clothes-50.png',
+                                  label: 'Clothes'),
+                              _CategoryItem(
+                                  icon: 'assets/icons/categories/icons8-school-uniform-62.png',
+                                  label: 'Uniforms'),
+                              _CategoryItem(
+                                  icon: 'assets/icons/categories/icons8-smartphone-50.png',
+                                  label: 'Smartphones'),
+                              _CategoryItem(
+                                  icon: 'assets/icons/categories/icons8-sparkling-diamond-50.png',
+                                  label: 'Jewelry'),
+                              _CategoryItem(
+                                  icon: 'assets/icons/categories/icons8-toy-car-50.png',
+                                  label: 'Toys'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            
+
+            /// POPULAR PRODUCTS
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TSectionHeading(
+                    title: 'Popular Products',
+                    onPressed: () => Get.to(() => const AllProducts()),
+                  ),
+                  const SizedBox(height: TSizes.spaceBtwItems),
+                  Obx(() {
+                    if (controller.isLoading.value) {
+                      return const TVerticalProductShimmer();
+                    }
+
+                    if (controller.featuredProducts.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No data found!',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      );
+                    }
+
+                    return TGridLayout(
+                      itemCount: controller.featuredProducts.length,
+                      itemBuilder: (_, index) => TProductCardVertical(
+                        product: controller.featuredProducts[index],
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+            const SizedBox(height: TSizes.spaceBtwSections),
           ],
         ),
       ),
-      body: Obx(() => controller.screens[controller.selectedIndex.value]),
     );
   }
 }
+class _CategoryItem extends StatelessWidget {
+  final String icon;
+  final String label;
 
-// Local navigation controller for HomeScreen
-class _HomeNavigationController extends GetxController {
-  final Rx<int> selectedIndex = 0.obs;
-
-  final screens = [
-    // You can use the same widgets as in NavigationMenu
-    const HomeScreenContent(), // Extract your current HomeScreen body to this widget
-    const StoreScreen(),
-    const FavouriteScreen(),
-    const SettingsScreen(),
-  ];
-}
-
-// Extract your current HomeScreen body (the SingleChildScrollView and its content) into this widget:
-class HomeScreenContent extends StatelessWidget {
-  const HomeScreenContent({Key? key}) : super(key: key);
+  const _CategoryItem({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ProductController());
-    return SingleChildScrollView(
+    return Container(
+      width: 70,
+      margin: const EdgeInsets.only(right: 12),
       child: Column(
         children: [
-          ///header
-          const TPrimaryHeaderContainer(
-            child: Column(
-              children: [
-                ///appbar
-                THomeAppBar(),
-                SizedBox(height: TSizes.spaceBtwSections),
-
-                ///searchbar
-                TSearchContainer(text: 'Search in store'),
-                SizedBox(height: TSizes.spaceBtwSections),
-
-                ///categories
-                Padding(
-                  padding: EdgeInsets.only(left: TSizes.defaultSpace),
-                  child: Column(
-                    children: [
-                      ///heading of categories
-                      TSectionHeading(
-                          title: 'Popular Categories',
-                          showActionButton: false,
-                          textColor: Colors.white),
-                      SizedBox(height: TSizes.spaceBtwItems),
-
-                      ///categories
-                      THomeCategories(),
-                    ],
-                  ),
-                ),
-                SizedBox(height: TSizes.spaceBtwSections),
-              ],
+          Container(
+            width: 56,
+            height: 56,
+            padding: const EdgeInsets.all(10),
+            decoration: const BoxDecoration(
+              color: Color(0xFFE5E5E5),
+              shape: BoxShape.circle,
             ),
+            child: Image.asset(icon, fit: BoxFit.contain),
           ),
-
-          ///Body
-          Padding(
-            padding: const EdgeInsets.all(TSizes.defaultSpace),
-            child: Column(
-              children: [
-                const TPromoSlider(),
-                const SizedBox(height: TSizes.spaceBtwSections),
-
-                ///-heading
-                TSectionHeading(
-                    title: 'Popular products',
-                    onPressed: () => Get.to(() => const AllProducts())),
-                const SizedBox(height: TSizes.spaceBtwItems),
-
-                ///popular products
-                Obx(() {
-                  if (controller.isLoading.value)
-                    return const TVerticalProductShimmer();
-                  if (controller.featuredProducts.isEmpty) {
-                    return Center(
-                        child: Text('No data found!',
-                            style: Theme.of(context).textTheme.bodyMedium));
-                  }
-                  return TGridLayout(
-                      itemCount: controller.featuredProducts.length,
-                      itemBuilder: (_, index) => TProductCardVertical(
-                          product: controller.featuredProducts[index]));
-                }),
-              ],
-            ),
-          )
+          const SizedBox(height: 5),
+          Text(label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 12)),
         ],
       ),
     );

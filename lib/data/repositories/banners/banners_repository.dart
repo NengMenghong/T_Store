@@ -1,3 +1,4 @@
+// data/repositories/banners/banners_repository.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -31,3 +32,30 @@ class BannerRepository extends GetxController {
 
 
 }
+/*class BannerRepository extends GetxController {
+  final _db = FirebaseFirestore.instance;
+
+  Future<List<BannerModel>> fetchBanners() async {
+    try {
+      // -- Check this collection name! --
+      final result = await _db.collection('Banners').get();
+      
+      // -- Print the result to the console for debugging! --
+      print('Banners collection found: ${result.docs.isNotEmpty}'); 
+      
+      final banners = result.docs.map((document) => BannerModel.fromSnapshot(document)).toList();
+      
+      // -- Print the final list of banners! --
+      print('Number of banners mapped: ${banners.length}');
+      
+      return banners;
+      
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again.';
+    }
+  }
+}*/

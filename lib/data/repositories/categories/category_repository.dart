@@ -1,3 +1,4 @@
+// data/repositories/categories/category_repository.dart
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,7 +14,7 @@ class CategoryRepository extends GetxController {
   final _db = FirebaseFirestore.instance;
 
   ///Get all categories
-  Future<List<CategoryModel>> getAllCategories() async {
+  /*Future<List<CategoryModel>> getAllCategories() async {
     try{
       final snapshot = await _db.collection('Categories').get();
       final list = snapshot.docs.map((document) => CategoryModel.fromSnapshot(document)).toList();
@@ -25,8 +26,32 @@ class CategoryRepository extends GetxController {
     } catch (e) {
       throw 'Something went wrong, Please try again';
     }
-  }
+  }*/
+/// Get all categories
+  Future<List<CategoryModel>> getAllCategories() async {
+    try {
+      // -- Check this collection name! It must be an exact match. --
+      final snapshot = await _db.collection('Categories').get();
+      
+      // -- Print the result to the console for debugging! --
+      print('Categories collection found: ${snapshot.docs.isNotEmpty}');
+      
+      // Map the documents to your model
+      final list = snapshot.docs.map((document) => CategoryModel.fromSnapshot(document)).toList();
 
+      // -- Print the final list of categories! --
+      print('Number of categories mapped: ${list.length}');
+
+      return list;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'Something went wrong. Please try again.';
+    }
+  }
+  
   ///upload categories to firestore
   Future<void> uploadDummyData(List<CategoryModel> categories) async {
     try{

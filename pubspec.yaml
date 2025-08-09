@@ -90,7 +90,7 @@ flutter:
     - assets/images/user/
     - assets/images/reviews/
     - assets/icons/payment_methods/
-
+    
 
 #------LOCAL FONTS------#
   fonts:

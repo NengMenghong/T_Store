@@ -1,3 +1,4 @@
+// features/shop/models/product_model.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:t_store/features/shop/models/brand_model.dart';
 import 'package:t_store/features/shop/models/product_attributes_model.dart';
@@ -37,10 +38,10 @@ class ProductModel {
     this.categoryId,
     this.description,
     this.productAttributes,
-    this.productVariations,
+    this.productVariations, required String image,
   });
 
-  static ProductModel empty() => ProductModel(id: '', title: '', stock: 0, price: 0, thumbnail: '', productType: '');
+  static ProductModel empty() => ProductModel(id: '', title: '', stock: 0, price: 0, thumbnail: '', productType: '', image: '');
 
   toJson() {
     return {
@@ -79,7 +80,11 @@ class ProductModel {
       brand: BrandModel.fromJson(data['Brand']),
       images: data['Images'] != null ? List<String>.from(data['Images']) : [],
       productAttributes: (data['ProductAttributes'] as List<dynamic>).map((e) => ProductAttributeModel.fromJson(e)).toList(),
-      productVariations: (data['ProductVariations'] as List<dynamic>).map((e) => ProductVariationModel.fromJson(e)).toList(),
+      productVariations: (data['ProductVariations'] as List<dynamic>).map((e) => ProductVariationModel.fromJson(e)).toList(), image: '',
     );
   }
+
+  copyWith({Object? image, Object? thumbnail}) {}
+
+  static fromMap(Map<String, dynamic> data) {}
 }

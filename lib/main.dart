@@ -13,7 +13,11 @@ Future<void> main() async {
 
   ///widgets binding
   final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-
+  
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   ///Getx local storage
   await GetStorage.init();
 
