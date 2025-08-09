@@ -95,23 +95,16 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
+Column(
+  children: [
+    // Categories section
+    SizedBox(height: 20),
+    HomeBannerSlider(), // Our local image slider
+    SizedBox(height: 20),
+    // Popular products section
+  ],
+),
 
-            /// PROMO SLIDER
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'SNEAKERS OF THE WEEK',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: TSizes.spaceBtwItems),
-                  TPromoSlider(),
-                ],
-              ),
-            ),
-            const SizedBox(height: TSizes.spaceBtwSections),
 
             /// POPULAR PRODUCTS
             Padding(

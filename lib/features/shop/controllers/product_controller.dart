@@ -11,9 +11,6 @@ class ProductController extends GetxController {
   final productRepository = Get.put(ProductRepository());
   final RxList<ProductModel> featuredProducts = <ProductModel>[].obs;
   final RxBool isLoading = true.obs;
-  get selectedIndex => null;
-
-  get screens => null;
 
   @override
   void onInit() {
@@ -25,7 +22,7 @@ class ProductController extends GetxController {
     try {
       isLoading.value = true;
 
-      /// 🧪 Mock data for testing only
+      /// 🧪 Mock data for testing
       final products = [
         ProductModel(
           id: '1',
@@ -33,8 +30,7 @@ class ProductController extends GetxController {
           price: 59.99,
           salePrice: 39.99,
           image: 'assets/images/products/acer_laptop_1.png',
-          thumbnail:
-              'assets/images/products/acer_laptop_1.png', // <-- set thumbnail
+          thumbnail: 'assets/images/products/acer_laptop_1.png',
           productType: ProductType.single.toString(),
           productVariations: [],
           stock: 10,
@@ -45,8 +41,7 @@ class ProductController extends GetxController {
           price: 699.99,
           salePrice: 599.99,
           image: 'assets/images/products/iphone_12_blue.png',
-          thumbnail:
-              'assets/images/products/iphone_12_blue.png', // <-- set thumbnail
+          thumbnail: 'assets/images/products/iphone_12_blue.png',
           productType: ProductType.single.toString(),
           productVariations: [],
           stock: 5,
@@ -56,15 +51,13 @@ class ProductController extends GetxController {
           title: 'Gaming Laptop',
           price: 1299.99,
           salePrice: 1199.99,
-          image: 'assets/images/products/gaming_laptop.png',
-          thumbnail:
-              'assets/images/products/gaming_laptop.png', // <-- set thumbnail
+          image: 'assets/images/products/acer_laptop_1.png',
+          thumbnail: 'assets/images/products/acer_laptop_1.png',
           productType: ProductType.single.toString(),
           productVariations: [],
           stock: 2,
         ),
       ];
-      
 
       featuredProducts.assignAll(products);
     } catch (e) {
@@ -74,48 +67,32 @@ class ProductController extends GetxController {
     }
   }
 
-  /// get product price or price range for variations
+  /// Get product price or range
   String getProductPrice(ProductModel product) {
     double smallestPrice = double.infinity;
     double largestPrice = 0.0;
 
-    //if no variations exist return the simple price or sale price
     if (product.productType == ProductType.single.toString()) {
-      return (product.salePrice > 0 ? product.salePrice : product.price)
-          .toString();
+      return "\$${(product.salePrice > 0 ? product.salePrice : product.price).toStringAsFixed(2)}";
     } else {
-      //calculate the smallest and largest prices among variations
-      if (product.productVariations != null) {
+      if (product.productVariations != null && product.productVariations!.isNotEmpty) {
         for (var variation in product.productVariations!) {
-          //determine the price to consider(sale price if available, otherwise regular price)
           double priceToConsider =
               variation.salePrice > 0.0 ? variation.salePrice : variation.price;
-
-          //update smallest and largest price
-          if (priceToConsider < smallestPrice) {
-            smallestPrice = priceToConsider;
-          }
-
-          if (priceToConsider > largestPrice) {
-            largestPrice = priceToConsider;
-          }
+          if (priceToConsider < smallestPrice) smallestPrice = priceToConsider;
+          if (priceToConsider > largestPrice) largestPrice = priceToConsider;
         }
-      } else {
-        smallestPrice = 0.0;
-        largestPrice = 234;
       }
 
-      //if smallest and largest price are the same return a single price
-      if (smallestPrice.isEqual(largestPrice)) {
-        return largestPrice.toString();
+      if (smallestPrice == largestPrice) {
+        return "\$${largestPrice.toStringAsFixed(2)}";
       } else {
-        //otherwise return A price range
-        return '$smallestPrice - \$$largestPrice';
+        return "\$${smallestPrice.toStringAsFixed(2)} - \$${largestPrice.toStringAsFixed(2)}";
       }
     }
   }
 
-  /// calculate discount percentage
+  /// Calculate discount percentage
   String? calculateSalePercentage(double originalPrice, double? salePrice) {
     if (salePrice == null || salePrice <= 0.0) return null;
     if (originalPrice <= 0) return null;
@@ -124,7 +101,7 @@ class ProductController extends GetxController {
     return percentage.toStringAsFixed(0);
   }
 
-  /// -- check product stock status
+  /// Check product stock
   String getProductStockStatus(int stock) {
     return stock > 0 ? 'In Stock' : 'Out of Stock';
   }
