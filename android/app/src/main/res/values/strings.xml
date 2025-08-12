@@ -1,2 +1,5 @@
-<string name="facebook_app_id">{AppId}</string>
-<string name="facebook_client_token">{ClientToken}</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="facebook_app_id">4203959513257314</string>
+<string name="facebook_client_token">9487c4a981f20e29f870233b00b20dc0</string>
+</resources>
