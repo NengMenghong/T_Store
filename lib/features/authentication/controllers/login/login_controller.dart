@@ -14,155 +14,158 @@ import 'package:t_store/utils/helpers/network_manager.dart';
 import 'package:t_store/utils/popups/full_screen_loader.dart';
 
 class LoginController extends GetxController {
-  ///variables
+  /// --- Variables ---
   final rememberMe = false.obs;
   final hidePassword = true.obs;
   final localStorage = GetStorage();
   final email = TextEditingController();
   final password = TextEditingController();
-  GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
-  final userController = Get.put(UserController());
+  final loginFormKey = GlobalKey<FormState>();
 
-  BuildContext? get context => null;
+  final userController = Get.put(UserController());
 
   @override
   void onInit() {
+    /// Load saved credentials if Remember Me was checked before
     email.text = localStorage.read('REMEMBER_ME_EMAIL') ?? '';
     password.text = localStorage.read('REMEMBER_ME_PASSWORD') ?? '';
     super.onInit();
   }
 
-  ///email and password sign in
+  /// --- Email & Password Sign In ---
   Future<void> emailAndPasswordSignIn() async {
     try {
-      //start loading
+      // Start loading
       TFullScreenLoader.openLoadingDialog(
           'Logging you in...', TImages.docerAnimation);
 
-      //check internet connectivity
+      // Check internet
       final isConnected = await NetworkManager.instance.isConnected();
       if (!isConnected) {
         TFullScreenLoader.stopLoading();
         return;
       }
 
-      //form validation
+      // Validate form
       if (!loginFormKey.currentState!.validate()) {
         TFullScreenLoader.stopLoading();
         return;
       }
 
-      //save data if remember me is selected
+      // Save data if remember me is checked
       if (rememberMe.value) {
         localStorage.write('REMEMBER_ME_EMAIL', email.text.trim());
         localStorage.write('REMEMBER_ME_PASSWORD', password.text.trim());
+      } else {
+        localStorage.remove('REMEMBER_ME_EMAIL');
+        localStorage.remove('REMEMBER_ME_PASSWORD');
       }
 
-      //login user with email & password authentication
-      await AuthenticationRepository.instance
-          .loginWithEmailAndPassword(email.text.trim(), password.text.trim());
+      // Login with FirebaseAuth
+      final userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: email.text.trim(), password: password.text.trim());
 
-      //remove loader
+      // Stop loading
       TFullScreenLoader.stopLoading();
 
-      //Redirect
-      AuthenticationRepository.instance.screenRedirect();
+      // Redirect if login successful
+      if (userCredential.user != null) {
+        AuthenticationRepository.instance.screenRedirect();
+      }
+    } on FirebaseAuthException catch (e) {
+      TFullScreenLoader.stopLoading();
+      TLoaders.errorSnackBar(
+          title: 'Login Failed', message: e.message ?? 'Something went wrong');
     } catch (e) {
       TFullScreenLoader.stopLoading();
-      TLoaders.errorSnackBar(title: 'Oh snap...', message: e.toString());
+      TLoaders.errorSnackBar(title: 'Error', message: e.toString());
     }
   }
 
-  /// Google signIn authentication
+  /// --- Google Sign In ---
   Future<void> googleSignIn() async {
     try {
-      // Start Loading
       TFullScreenLoader.openLoadingDialog(
           'Logging you in...', TImages.docerAnimation);
 
-      // Check Internet Connectivity
       final isConnected = await NetworkManager.instance.isConnected();
       if (!isConnected) {
         TFullScreenLoader.stopLoading();
         return;
       }
 
-      // Google Authentication
       final userCredentials =
           await AuthenticationRepository.instance.signInWithGoogle();
 
-      // Save User Record
+      // Save user data to Firestore
       await userController.saveUserRecord(userCredentials);
 
-      // Remove Loader
       TFullScreenLoader.stopLoading();
-
-      // Redirect
       AuthenticationRepository.instance.screenRedirect();
     } catch (e) {
-      // Remove Loader
       TFullScreenLoader.stopLoading();
-      //
-
-      TLoaders.errorSnackBar(title: 'Oh snap...', message: e.toString());
+      TLoaders.errorSnackBar(title: 'Google Sign-In Failed', message: e.toString());
     }
   }
 
-  // Facebook signIn authentication
+  /// --- Facebook Sign In ---
   Future<void> facebookSignIn() async {
-  try {
-    final LoginResult result = await FacebookAuth.instance.login(
-      permissions: ['email', 'public_profile'],
-    );
+    try {
+      TFullScreenLoader.openLoadingDialog(
+          'Logging you in...', TImages.docerAnimation);
 
-    if (result.status == LoginStatus.success) {
-      print("Token: ${result.accessToken?.tokenString}");
-
-      final OAuthCredential credential = FacebookAuthProvider.credential(
-        result.accessToken!.tokenString,
+      final result = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile'],
       );
 
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+      if (result.status == LoginStatus.success) {
+        final OAuthCredential credential =
+            FacebookAuthProvider.credential(result.accessToken!.tokenString);
 
-      if (userCredential.user != null) {
+        final userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+
+        TFullScreenLoader.stopLoading();
+
+        if (userCredential.user != null) {
+          Get.snackbar(
+            "Success",
+            "Facebook sign-in successful",
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM,
+          );
+          Get.offAll(() => const HomeScreen());
+        }
+      } else if (result.status == LoginStatus.cancelled) {
+        TFullScreenLoader.stopLoading();
         Get.snackbar(
-          "Success",
-          "Facebook sign-in successful",
-          backgroundColor: Colors.green,
+          "Cancelled",
+          "Facebook sign-in cancelled",
+          backgroundColor: Colors.orange,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM,
         );
-        Get.offAll(HomeScreen());
+      } else {
+        TFullScreenLoader.stopLoading();
+        Get.snackbar(
+          "Failed",
+          "Facebook sign-in failed: ${result.message}",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
-
-    } else if (result.status == LoginStatus.cancelled) {
+    } catch (e) {
+      TFullScreenLoader.stopLoading();
       Get.snackbar(
-        "Cancelled",
-        "Facebook sign-in cancelled",
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
-
-    } else {
-      Get.snackbar(
-        "Failed",
-        "Facebook sign-in failed: ${result.message}",
+        "Error",
+        "Facebook sign-in failed: $e",
         backgroundColor: Colors.red,
         colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
       );
     }
-  } catch (e) {
-    print("Error: $e");
-    Get.snackbar(
-      "Error",
-      "Facebook sign-in failed: $e",
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-    );
   }
-}
 }

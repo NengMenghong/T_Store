@@ -1,9 +1,9 @@
+// common/widgets/products/product_cards/product_card_vertical.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:t_store/common/styles/shadows.dart';
 import 'package:t_store/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:t_store/common/widgets/icons/t_circular_icon.dart';
 import 'package:t_store/common/widgets/images/t_rounded_image.dart';
 import 'package:t_store/common/widgets/texts/product_price_text.dart';
 import 'package:t_store/common/widgets/texts/product_title_text.dart';
@@ -70,12 +70,22 @@ class TProductCardVertical extends StatelessWidget {
                     ),
                   ),
 
-                  ///favorite icon button
-                  const Positioned(
-                    top: 0,
-                    right: 0,
-                    child: TCircularIcon(icon: Iconsax.heart5, color: Colors.red),
-                  ),
+                
+          // ❤️ Favorite icon (top-right)
+          Positioned(
+            right: 8,
+            top: 8,
+            child: Obx(() {
+              final isFav = controller.isInWishlist(product);
+              return IconButton(
+                icon: Icon(
+                  isFav ? Icons.favorite : Icons.favorite_border,
+                  color: isFav ? Colors.red : const Color.fromARGB(255, 137, 134, 134),
+                ),
+                onPressed: () => controller.toggleFavorite(product),
+              );
+            }),
+          ),
                 ],
               ),
             ),

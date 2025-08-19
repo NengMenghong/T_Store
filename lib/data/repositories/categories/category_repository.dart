@@ -79,4 +79,5 @@ class CategoryRepository extends GetxController {
       throw 'Something went wrong, please try again';
     }
   }
+
 }

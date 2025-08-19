@@ -1,3 +1,4 @@
+// utils/constraints/image_strings.dart
 
 
 ///this class contains all the app images in string formats
@@ -117,9 +118,6 @@ class TImages{
   static const String productImage31 = "assets/images/products/tennis_racket.png";
   static const String productImage32 = "assets/images/products/bedroom_bed.png";
   static const String productImage33 = "assets/images/products/bedroom_lamp.png";
-
-
-
 
 
 

@@ -1,10 +1,11 @@
+// navigation_menu.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:t_store/features/personalization/screens/settings/settings.dart';
 import 'package:t_store/features/shop/screens/home/home.dart';
 import 'package:t_store/features/shop/screens/store/store.dart';
-import 'package:t_store/features/shop/screens/wishlist/wishlist.dart';
+import 'package:t_store/features/shop/screens/wishlist/favorite.dart';
 import 'package:t_store/utils/constraints/colors.dart';
 import 'package:t_store/utils/helpers/helper_functions.dart';
 

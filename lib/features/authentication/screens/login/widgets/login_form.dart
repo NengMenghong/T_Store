@@ -77,13 +77,18 @@ class TLoginForm extends StatelessWidget {
             ),
             const SizedBox(height: TSizes.spaceBtwSections),
 
-            ///signIn Button
-            SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                    onPressed: () => Get.to(() => const NavigationMenu()),
-                    child: const Text(TTexts.signIn))),
-            const SizedBox(height: TSizes.spaceBtwItems),
+            /// signIn Button
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton(
+    onPressed: () async {
+      if (controller.loginFormKey.currentState!.validate()) {
+       Get.offAll(() => const NavigationMenu());
+      }
+    },
+    child: const Text(TTexts.signIn),
+  ),
+),
 
             ///create account button
             SizedBox(

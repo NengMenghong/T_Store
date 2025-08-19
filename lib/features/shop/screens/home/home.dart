@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:t_store/common/widgets/custom_shapes/containers/primary_header_container.dart';
-import 'package:t_store/common/widgets/custom_shapes/containers/search_container.dart';
 import 'package:t_store/common/widgets/layouts/grid_layout.dart';
 import 'package:t_store/common/widgets/loaders/vertical_product_shimmer.dart';
 import 'package:t_store/common/widgets/products/product_cards/product_card_vertical.dart';
@@ -34,11 +33,29 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: TSizes.spaceBtwSections),
 
                   /// SEARCH BAR
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
-                    child: TSearchContainer(text: 'Search In Store'),
-                  ),
-                  const SizedBox(height: TSizes.spaceBtwSections),
+                  
+/// SEARCH BAR
+Padding(
+  padding: const EdgeInsets.symmetric(horizontal: TSizes.defaultSpace),
+  child: TextField(
+    onChanged: (query) => controller.searchProducts(query),
+    style: const TextStyle(color: Colors.white), // text color white
+    decoration: InputDecoration(
+      hintText: "Search in store...",
+      hintStyle: const TextStyle(color: Colors.white70),
+      prefixIcon: const Icon(Icons.search, color: Colors.white),
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.white, width: 1.5),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.white, width: 2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+    ),
+  ),
+),
+
 
                   /// POPULAR CATEGORIES
                   Padding(
@@ -117,27 +134,29 @@ Column(
                     onPressed: () => Get.to(() => const AllProducts()),
                   ),
                   const SizedBox(height: TSizes.spaceBtwItems),
-                  Obx(() {
-                    if (controller.isLoading.value) {
-                      return const TVerticalProductShimmer();
-                    }
 
-                    if (controller.featuredProducts.isEmpty) {
-                      return Center(
-                        child: Text(
-                          'No data found!',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      );
-                    }
+  Obx(() {
+  if (controller.isLoading.value) {
+    return const TVerticalProductShimmer();
+  }
 
-                    return TGridLayout(
-                      itemCount: controller.featuredProducts.length,
-                      itemBuilder: (_, index) => TProductCardVertical(
-                        product: controller.featuredProducts[index],
-                      ),
-                    );
-                  }),
+  if (controller.searchResults.isEmpty) {
+    return Center(
+      child: Text(
+        'No products found!',
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+    );
+  }
+
+  return TGridLayout(
+    itemCount: controller.searchResults.length,
+    itemBuilder: (_, index) => TProductCardVertical(
+      product: controller.searchResults[index],
+    ),
+  );
+}),
+
                 ],
               ),
             ),
