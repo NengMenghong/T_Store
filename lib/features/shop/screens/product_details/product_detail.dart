@@ -16,15 +16,15 @@ import 'package:t_store/utils/constraints/enums.dart';
 import 'package:t_store/utils/constraints/sizes.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({Key? key, required this.product})
-      : super(key: key);
+  const ProductDetailScreen({Key? key, required this.product}) : super(key: key);
 
   final ProductModel product;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const TBottomAddToCart(),
+      bottomNavigationBar: TBottomAddToCart(product: product, productId: '',),
+
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,14 +60,16 @@ class ProductDetailScreen extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // TODO: Navigate to checkout screen
+                                          
                       },
                       child: const Text('Checkout'),
                     ),
                   ),
                   const SizedBox(height: TSizes.spaceBtwSections),
 
-                  /// Description
+
+
+  /// Description
 const TSectionHeading(
   title: 'Description',
   showActionButton: false,

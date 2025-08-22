@@ -1,3 +1,4 @@
+// common/widgets/icons/t_circular_icon.dart
 import 'package:flutter/material.dart';
 import 'package:t_store/utils/constraints/colors.dart';
 import 'package:t_store/utils/constraints/sizes.dart';
@@ -34,7 +35,7 @@ class TCircularIcon extends StatelessWidget {
                 : TColors.white.withOpacity(0.9),
         borderRadius: BorderRadius.circular(100),
       ),
-      child: IconButton(onPressed: () {}, icon: Icon(icon, color: color, size: size,)),
+      child: IconButton( onPressed: onPressed, icon: Icon(icon, color: color, size: size,)),
     );
   }
 }

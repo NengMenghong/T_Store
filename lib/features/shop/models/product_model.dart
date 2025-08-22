@@ -5,6 +5,7 @@ import 'package:t_store/features/shop/models/product_attributes_model.dart';
 import 'package:t_store/features/shop/models/product_variation_model.dart';
 
 class ProductModel {
+  
   String id;
   int stock;
   String? sku;
@@ -21,6 +22,8 @@ class ProductModel {
   String productType;
   List<ProductAttributeModel>? productAttributes;
   List<ProductVariationModel>? productVariations;
+
+  static var dummy;
 
   ProductModel({
     required this.id,

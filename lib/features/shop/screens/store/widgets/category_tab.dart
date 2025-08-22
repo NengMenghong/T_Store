@@ -24,12 +24,13 @@ class TCategoryTab extends StatelessWidget {
           padding: const EdgeInsets.all(TSizes.defaultSpace),
           child: Column(
             children: [
-              /// Brand Showcase (replace with your assets)
-              
-
-
-
-
+              /// Category Title
+              TSectionHeading(
+                title: category.name,
+                showActionButton: true,
+                onPressed: () {   
+                },
+              ),
               const SizedBox(height: TSizes.spaceBtwItems),
 
               /// "You Might Like" Section

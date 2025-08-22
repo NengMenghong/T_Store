@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:t_store/app.dart';
 import 'package:t_store/data/repositories/authentication/authentication_repository.dart';
+import 'package:t_store/features/shop/controllers/cart_controller.dart';
 import 'package:t_store/firebase_options.dart';
 
 
@@ -13,14 +14,14 @@ Future<void> main() async {
 
   ///widgets binding
   final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  
+  Get.put(CartController());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   ///Getx local storage
   await GetStorage.init();
-
+  
 
   /// await splash until other items load
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);

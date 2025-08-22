@@ -7,6 +7,7 @@ import 'package:t_store/utils/helpers/loaders.dart';
 
 class ProductController extends GetxController {
   static ProductController get instance => Get.find();
+  
 
   final productRepository = Get.put(ProductRepository());
   final RxList<ProductModel> featuredProducts = <ProductModel>[].obs;
@@ -17,6 +18,8 @@ class ProductController extends GetxController {
 
 // Wishlist products
 final RxList<ProductModel> wishlist = <ProductModel>[].obs;
+
+  get totalCartPrice => null;
 
 /// Toggle favorite
 void toggleFavorite(ProductModel product) {

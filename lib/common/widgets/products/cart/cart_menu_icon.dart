@@ -1,41 +1,50 @@
+// common/widgets/products/cart/cart_menu_icon.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:t_store/features/shop/controllers/cart_controller.dart';
 import 'package:t_store/features/shop/screens/cart/cart.dart';
 import 'package:t_store/utils/constraints/colors.dart';
 
 class TCartCounterIcon extends StatelessWidget {
-  const TCartCounterIcon({
-    super.key,
-    this.iconColor,
-  });
+  const TCartCounterIcon({super.key, this.iconColor});
 
   final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
+    final cartController = CartController.instance;
+
     return Stack(
       children: [
         IconButton(
-            onPressed: () => Get.to(() => const CartScreen()),
-            icon: Icon(Iconsax.shopping_bag, color: iconColor)),
+          onPressed: () => Get.to(() => const CartScreen()),
+          icon: Icon(Iconsax.shopping_bag, color: iconColor),
+        ),
         Positioned(
           right: 0,
-          child: Container(
-            width: 18,
-            height: 18,
-            decoration: BoxDecoration(
-              color: TColors.black,
-              borderRadius: BorderRadius.circular(100),
-            ),
-            child: Center(
-              child: Text('2',
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelLarge!
-                      .apply(color: TColors.white, fontSizeFactor: 0.8)),
-            ),
-          ),
+          child: Obx(() {
+            final count = cartController.totalItems;
+            return count > 0
+                ? Container(
+                    width: 18,
+                    height: 18,
+                    decoration: BoxDecoration(
+                      color: TColors.black,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Center(
+                      child: Text(
+                        count.toString(),
+                        style: Theme.of(context).textTheme.labelLarge!.apply(
+                              color: TColors.white,
+                              fontSizeFactor: 0.8,
+                            ),
+                      ),
+                    ),
+                  )
+                : const SizedBox();
+          }),
         )
       ],
     );
